@@ -1,0 +1,23 @@
+diff --git a/core/libs/prx/libSceVideoOut/include/VideoOutDriver.hpp b/core/libs/prx/libSceVideoOut/include/VideoOutDriver.hpp
+--- a/core/libs/prx/libSceVideoOut/include/VideoOutDriver.hpp
++++ b/core/libs/prx/libSceVideoOut/include/VideoOutDriver.hpp
+@@ -64,6 +64,7 @@
+ static constexpr int VIDEO_OUT_BUFFER_ATTRIBUTE_NUM_MAX = 4;
+ static constexpr int VIDEO_OUT_NUM_MAX = 4;
+ static constexpr std::size_t VIDEO_OUT_FLIP_QUEUE_CAPACITY = 16;
++static constexpr std::size_t VIDEO_OUT_GPU_FLIP_DEPTH = 2;
+ 
+ static constexpr int VIDEO_OUT_BUFFER_ATTRIBUTE_CATEGORY_UNCOMPRESSED = 0;
+ static constexpr int VIDEO_OUT_BUFFER_ATTRIBUTE_CATEGORY_COMPRESSED = 1;
+diff --git a/core/libs/prx/libSceVideoOut/src/VideoOutDriver.cpp b/core/libs/prx/libSceVideoOut/src/VideoOutDriver.cpp
+--- a/core/libs/prx/libSceVideoOut/src/VideoOutDriver.cpp
++++ b/core/libs/prx/libSceVideoOut/src/VideoOutDriver.cpp
+@@ -120,7 +120,7 @@
+     void WaitForFlipRoom() override {
+         std::unique_lock queueLock(queue->mutex);
+         const bool room = queue->changed.wait_for(queueLock, std::chrono::seconds(60), [&] {
+-            return queue->failure || queue->stopping || cfg->shutdownToken.stop_requested() || queue->reservations.load() < VIDEO_OUT_FLIP_QUEUE_CAPACITY;
++            return queue->failure || queue->stopping || cfg->shutdownToken.stop_requested() || queue->reservations.load() < VIDEO_OUT_GPU_FLIP_DEPTH;
+         });
+         if (queue->failure) std::rethrow_exception(queue->failure);
+         if (queue->stopping || cfg->shutdownToken.stop_requested()) throw ProcessShutdown{};

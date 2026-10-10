@@ -1,0 +1,16 @@
+﻿# Local game dump, generated runtime and build artifacts — keep out of public commits
+/Balatro/
+/app0/
+/libs/
+/shader_cache/
+/_build_tools/
+/_prx_extract/
+/_sd/
+/_anyps5_src/repo/AnyPS5-main/build*/
+/_anyps5_src/anyps5-main.zip
+/Balatro-current.exe
+/libgcc_s_seh-1.dll
+/libstdc++-6.dll
+/libwinpthread-1.dll
+/relinker-v*.exe
+/prx-windows-*.zip
